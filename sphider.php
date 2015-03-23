@@ -201,7 +201,7 @@ function sphider_remove_page($id=0)
 	}
 	
 add_action('admin_menu','sphider_admin_menu');
-add_action('save_post','sphider_reindex');
+// add_action('save_post','sphider_reindex');
 add_action('delete_post','sphider_remove_page');
 
 if( isset($_GET['s']) )

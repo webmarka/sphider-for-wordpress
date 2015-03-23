@@ -203,4 +203,20 @@ function sphider_remove_page($id=0)
 add_action('admin_menu','sphider_admin_menu');
 add_action('save_post','sphider_reindex');
 add_action('delete_post','sphider_remove_page');
+
+if( isset($_GET['s']) )
+{
+add_filter( 'template_include', 'sphider_search_template' );
+}
+
+function sphider_search_template( $template )
+{
+
+    $_GET['query'] = $_GET['s'];
+    $_GET['search'] = 1;
+    $template = plugin_dir_path( __FILE__ ) . 'search.php';
+    return $template;
+
+}
+
 ?>

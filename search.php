@@ -5,8 +5,9 @@
 * By Ando Saabas          ando(a t)cs.ioc.ee
 ********************************************/
 //error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING); 
-error_reporting(E_ALL); 
-$include_dir = "./include"; 
+//error_reporting(E_ALL); 
+error_reporting(0);
+$include_dir = "include"; 
 include ("$include_dir/commonfuncs.php");
 //extract(getHttpVars());
 
@@ -30,10 +31,10 @@ if (isset($_GET['adv']))
 	$adv = $_GET['adv'];
 	
 	
-$include_dir = "./include"; 
-$template_dir = "./templates"; 
-$settings_dir = "./settings"; 
-$language_dir = "./languages";
+$include_dir = "include"; 
+$template_dir = "templates"; 
+$settings_dir = "settings"; 
+$language_dir = "languages";
 
 
 require_once("$settings_dir/database.php");
@@ -44,7 +45,7 @@ require_once("$include_dir/categoryfuncs.php");
 
 include "$settings_dir/conf.php";
 
-include "$template_dir/$template/header.html";
+get_header();
 include "$language_dir/$language-language.php";
 
 
@@ -89,7 +90,7 @@ if ($count_level0) {
 
 
 
-require_once("$template_dir/$template/search_form.html");
+// require_once("$template_dir/$template/search_form.html");
 
 
 function getmicrotime(){
@@ -102,9 +103,9 @@ function getmicrotime(){
 function poweredby () {
 	global $sph_messages;
     //If you want to remove this, please donate to the project at http://www.sphider.eu/donate.php
-    print $sph_messages['Powered by'];?>  <a href="http://www.sphider.eu/"><img src="sphider-logo.png" border="0" style="vertical-align: middle" alt="Sphider"></a>
+    /* print $sph_messages['Powered by'];?>  <a href="http://www.sphider.eu/"><img src="sphider-logo.png" border="0" style="vertical-align: middle" alt="Sphider"></a>
 
-    <?php 
+    <?php */ 
 }
 
 
@@ -141,5 +142,5 @@ switch ($search) {
 	break;
 	}
 
-include "$template_dir/$template/footer.html";
+get_footer();
 ?>

@@ -34,6 +34,7 @@ $site_funcs = Array (22=> "default",21=> "default",4=> "default", 19=> "default"
 $stat_funcs = Array ("statistics" => "default",  "delete_log"=> "default");
 $settings_funcs = Array ("settings" => "default");
 $index_funcs = Array ("index" => "default");
+$index_funcs = Array ("index" => "default");
 $clean_funcs = Array ("clean" => "default", 15=>"default", 16=>"default", 17=>"default", 23=>"default");
 $cat_funcs = Array (11=> "default", 10=> "default", "categories" => "default", "edit_cat"=>"default", "delete_cat"=>"default", "add_cat" => "default", 7=> "default");
 $database_funcs = Array ("database" => "default");
@@ -93,6 +94,7 @@ $database_funcs = Array ("database" => "default");
 		<li><a href="admin.php?f=settings" id="<?php print $settings_funcs[$f]?>">Settings</a></li>
 		<li><a href="admin.php?f=statistics" id="<?php print $stat_funcs[$f]?>">Statistics</a> </li>
 		<li><a href="admin.php?f=database" id="<?php print $database_funcs[$f]?>">Database</a></li>
+		<li><a href="admin.php?f=24" id="default">Log out</a></li>
 		</ul>
 	</div>
 	<div id="main">
@@ -404,7 +406,7 @@ function addcatform($parent) {
 		while ($row=mysql_fetch_array($result))	{
 			if ($row['indexdate']=='') {
 				$indexstatus="<font color=\"red\">Not indexed</font>";
-				$indexoption="<a href=\"admin.php?f=index&url=".urlencode($row[url])."\">Index</a>";
+				$indexoption="<a href=\"admin.php?f=index&url=$row[url]\">Index</a>";
 			} else {
 				$site_id = $row['site_id'];
 				$result2 = mysql_query("SELECT site_id from ".$mysql_table_prefix."pending where site_id =$site_id");
@@ -412,11 +414,11 @@ function addcatform($parent) {
 				$row2=mysql_fetch_array($result2);
 				if ($row2['site_id'] == $row['site_id']) {
 					$indexstatus = "Unfinished";
-					$indexoption="<a href=\"admin.php?f=index&url=".urlencode($row[url])."\">Continue</a>";
+					$indexoption="<a href=\"admin.php?f=index&url=$row[url]\">Continue</a>";
 
 				} else {
 					$indexstatus = $row['indexdate'];
-					$indexoption="<a href=\"admin.php?f=index&url=".urlencode($row[url])."&reindex=1\">Re-index</a>";
+					$indexoption="<a href=\"admin.php?f=index&url=$row[url]&reindex=1\">Re-index</a>";
 				}
 			}
 			if ($class =="white") 
@@ -696,9 +698,9 @@ function addcatform($parent) {
 					$_SESSION['index_advanced']=1;
 				}
 				if ($_SESSION['index_advanced']==1){
-					print "<a href='admin.php?f=index&adv=0&url=".urlencode($advurl)."'>Hide advanced options</a>";
+					print "<a href='admin.php?f=index&adv=0&url=$advurl'>Hide advanced options</a>";
 				} else {
-					print "<a href='admin.php?f=index&adv=1&url=".urlencode($advurl)."'>Advanced options</a>";
+					print "<a href='admin.php?f=index&adv=1&url=$advurl'>Advanced options</a>";
 				}
 
 				?>
@@ -739,7 +741,7 @@ function addcatform($parent) {
 		$url = replace_ampersand($row[url]);
 		if ($row['indexdate']=='') {
 			$indexstatus="<font color=\"red\">Not indexed</font>";
-			$indexoption="<a href=\"admin.php?f=index&url=".urlencode($url)."\">Index</a>";
+			$indexoption="<a href=\"admin.php?f=index&url=$url\">Index</a>";
 		} else {
 			$site_id = $row['site_id'];
 			$result2 = mysql_query("SELECT site_id from ".$mysql_table_prefix."pending where site_id =$site_id");
@@ -747,11 +749,11 @@ function addcatform($parent) {
 			$row2=mysql_fetch_array($result2);
 			if ($row2['site_id'] == $row['site_id']) {
 				$indexstatus = "Unfinished";
-				$indexoption="<a href=\"admin.php?f=index&url=".urlencode($url)."\">Continue indexing</a>";
+				$indexoption="<a href=\"admin.php?f=index&url=$url\">Continue indexing</a>";
 
 			} else {
 				$indexstatus = $row['indexdate'];
-				$indexoption="<a href=\"admin.php?f=index&url=".urlencode($url)."&reindex=1\">Re-index</a>";
+				$indexoption="<a href=\"admin.php?f=index&url=$url&reindex=1\">Re-index</a>";
 			}
 		}
 		?>
@@ -1161,7 +1163,7 @@ function addcatform($parent) {
 				showsites($message);
 		break;
 		case 2:
-			showsites();
+			showsites(null);
 		break;
 		case edit_site:
 			editsiteform($site_id);
@@ -1245,7 +1247,7 @@ function addcatform($parent) {
 			siteStats($site_id);
 		break;
 		case 20;
-			siteScreen($site_id);
+			siteScreen($site_id,null);
 		break;
 		case 21;
 			if (!isset($start))
@@ -1269,6 +1271,10 @@ function addcatform($parent) {
 		break;
 		case 23;
 			clearLog();
+		break;
+		case 24;
+			session_destroy();
+			header("Location: admin.php");
 		break;
 		case database;
 			include "db_main.php";

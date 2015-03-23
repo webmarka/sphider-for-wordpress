@@ -9,13 +9,13 @@ General settings
 ***********************/
 
 // Sphider version 
-$version_nr			= '1.3.4';
+$version_nr			= '1.3.5';
 
 //Language of the search page 
 $language			= 'en';
 
 // Template name/directory in templates dir
-$template	= 'bgc';
+$template	= 'standard';
 
 //Administrators email address (logs can be sent there)	
 $admin_email		= 'admin@localhost';
@@ -130,15 +130,7 @@ $show_meta_description = 1;
 $advanced_search	= 0;
 
 // Query scores are not shown if set to 0
-$show_query_scores	 = 1;
-
-// Search file location
-if(!isset($searchFile))
-$searchFile = 'search.php';
-
-// Search file location
-if(!isset($searchFileAppend))
-$searchFileAppend = '?';
+$show_query_scores	 = 1;	
 
 
 

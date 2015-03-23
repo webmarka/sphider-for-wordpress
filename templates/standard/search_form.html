@@ -3,7 +3,7 @@
 <tr>
 	<td align="center">
 
-	<form action="<?=$searchFile?>" method="get">
+	<form action="search.php" method="get">
 
 <table><tr><td>
 	<div align="left"> 
@@ -44,7 +44,7 @@
 	<input type="hidden" name="search" value="1"> 
 	</form>
 		<?php if ($has_categories && $search==1 && $show_categories){?> 
-		<a href="<?=$searchFile?>"><?php print $sph_messages['Categories']?></a>
+		<a href="search.php"><?php print $sph_messages['Categories']?></a>
 		<?php  }?>	   
 	</td>
 

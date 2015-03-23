@@ -1,4 +1,4 @@
-<?php
+<?php 
 function getFileContents($url) {
 	global $user_agent;
 	$urlparts = parse_url($url);
@@ -36,7 +36,6 @@ function getFileContents($url) {
 
 	$errno = 0;
 	$errstr = "";
-	print "siin";
 	$fp = @ fsockopen($target, $port, $errno, $errstr, $fsocket_timeout);
 
 	print $errstr;
@@ -115,7 +114,7 @@ function url_status($url) {
 		fputs($fp, $request);
 		$answer = fgets($fp, 4096);
 		$regs = Array ();
-		if (ereg("HTTP/[0-9.]+ (([0-9])[0-9]{2})", $answer, $regs)) {
+		if (preg_match("/HTTP/[0-9.]+ (([0-9])[0-9]{2})/", $answer, $regs)) {
 			$httpcode = $regs[2];
 			$full_httpcode = $regs[1];
 
@@ -129,25 +128,25 @@ function url_status($url) {
 			while ($answer) {
 				$answer = fgets($fp, 4096);
 
-				if (ereg("Location: *([^\n\r ]+)", $answer, $regs) && $httpcode == 3 && $full_httpcode != 302) {
+				if (preg_match("/Location: *([^\n\r ]+)/", $answer, $regs) && $httpcode == 3 && $full_httpcode != 302) {
 					$status['path'] = $regs[1];
 					$status['state'] = "Relocation: http $full_httpcode";
 					fclose($fp);
 					return $status;
 				}
 
-				if (eregi("Last-Modified: *([a-z0-9,: ]+)", $answer, $regs)) {
+				if (preg_match("/Last-Modified: *([a-z0-9,: ]+)/i", $answer, $regs)) {
 					$status['date'] = $regs[1];
 				}
 
-				if (eregi("Content-Type:", $answer)) {
+				if (preg_match("/Content-Type:/i", $answer)) {
 					$content = $answer;
 					$answer = '';
 					break;
 				}
 			}
 			$socket_status = socket_get_status($fp);
-			if (eregi("Content-Type: *([a-z/.-]*)", $content, $regs)) {
+			if (preg_match("/Content-Type: *([a-z\/.-]*)/i", $content, $regs)) {
 				if ($regs[1] == 'text/html' || $regs[1] == 'text/' || $regs[1] == 'text/plain') {
 					$status['content'] = 'text';
 					$status['state'] = 'ok';
@@ -202,7 +201,7 @@ function check_robot_txt($url) {
 		$regs = Array ();
 		$this_agent= "";
 		while (list ($id, $line) = each($robot)) {
-			if (eregi("^user-agent: *([^#]+) *", $line, $regs)) {
+			if (preg_match("/^user-agent: *([^#]+) */", $line, $regs)) {
 				$this_agent = trim($regs[1]);
 				if ($this_agent == '*' || $this_agent == $user_agent)
 					$check = 1;
@@ -210,8 +209,8 @@ function check_robot_txt($url) {
 					$check = 0;
 			}
 
-			if (eregi("disallow: *([^#]+)", $line, $regs) && $check == 1) {
-				$disallow_str = eregi_replace("[\n ]+", "", $regs[1]);
+			if (preg_match("/disallow: *([^#]+)/", $line, $regs) && $check == 1) {
+				$disallow_str = preg_replace("/[\n ]+/i", "", $regs[1]);
 				if (trim($disallow_str) != "") {
 					$omit[] = $disallow_str;
 				} else {
@@ -351,7 +350,7 @@ function unique_array($arr) {
 		//to eliminate/count multiple instance of words
 		$next_in_arr = next($arr);
 		if ($next_in_arr != $element) {
-			if (strlen($element) >= $min_word_length && preg_match($pattern, remove_accents($element)) && (@ $common[$element] <> 1)) {
+			if (strlen($element) >= $min_word_length && preg_match($pattern, sphider_remove_accents($element)) && (@ $common[$element] <> 1)) {
 				if (preg_match("/^(-|\\\')(.*)/", $element, $regs))
 					$element = $regs[2];
 
@@ -576,7 +575,7 @@ function clean_file($file, $url, $type) {
 	$urlparts = parse_url($url);
 	$host = $urlparts['host'];
 	//remove filename from path
-	$path = eregi_replace('([^/]+)$', "", $urlparts['path']);
+	$path = preg_replace('/([^\/]+)$/i', "", $urlparts['path']);
 	$file = preg_replace("/<link rel[^<>]*>/i", " ", $file);
 	$file = preg_replace("@<!--sphider_noindex-->.*?<!--\/sphider_noindex-->@si", " ",$file);	
 	$file = preg_replace("@<!--.*?-->@si", " ",$file);	
@@ -689,8 +688,7 @@ function calc_weights($wordarray, $title, $host, $path, $keywords) {
 }
 
 function isDuplicateMD5($md5sum) {
-	global $mysql_table_prefix,$table_prefix;
-	if(NULL==$mysql_table_prefix)$mysql_table_prefix = $table_prefix.'sph_';
+	global $mysql_table_prefix;
 	$result = mysql_query("select link_id from ".$mysql_table_prefix."links where md5sum='$md5sum'");
 	echo mysql_error();
 	if (mysql_num_rows($result) > 0) {
@@ -750,10 +748,9 @@ function check_include($link, $inc, $not_inc) {
 }
 
 function check_for_removal($url) {
-	global $mysql_table_prefix,$table_prefix;
+	global $mysql_table_prefix;
 	global $command_line;
-	if(NULL==$mysql_table_prefix)$mysql_table_prefix = $table_prefix.'sph_';
-	$result = mysql_query("select link_id, visible from ".$mysql_table_prefix."links where url='$url'");
+	$result = mysql_query("select link_id, visible from ".$mysql_table_prefix."links"." where url='$url'");
 	echo mysql_error();
 	if (mysql_num_rows($result) > 0) {
 		$row = mysql_fetch_row($result);

@@ -5,7 +5,7 @@
 * By Ando Saabas          ando(a t)cs.ioc.ee
 ********************************************/
 
-	$includes = array('./include', 'include', '../include', 'wp-content/plugins/sphider/include', '../wp-content/plugins/sphider/include');
+	$includes = array('./include', 'include', '../include');
 	if( !in_array($include_dir, $includes) )  {
        die("Illegal include.");
 	} 
@@ -165,6 +165,11 @@
 		"C=M;O=D" => 1,
 		"C=S;O=D" => 1,
 		"C=D;O=D" => 1);
+
+	function sphider_remove_accents($string) {
+		return (strtr($string, "ÀÁÂÃÄÅÆàáâãäåæÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëğÇçĞÌÍÎÏìíîïÙÚÛÜùúûüÑñŞßÿı",
+					  "aaaaaaaaaaaaaaoooooooooooooeeeeeeeeecceiiiiiiiiuuuuuuuunntsyy"));
+	}
 
 	$common = array
 		(

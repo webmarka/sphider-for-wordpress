@@ -9,19 +9,16 @@
 ********************************************/
 
 	set_time_limit (0);
-	$dir_path = "..";
-	$admin_dir = "";
-	if(!realpath($dir_path.'/include/commonfuncs.php')){$dir_path = "../wp-content/plugins/sphider"; $admin_dir = $dir_path."/admin/";}
-	$include_dir = $dir_path."/include";
-	include $admin_dir."auth.php";
+	$include_dir = "../include";
+	include "auth.php";
 	require_once ("$include_dir/commonfuncs.php");
 	$all = 0; 
 	extract (getHttpVars());
-	$settings_dir =  $dir_path."/settings";
+	$settings_dir =  "../settings";
 	require_once ("$settings_dir/conf.php");
 
-	include $admin_dir."messages.php";
-	include $admin_dir."spiderfuncs.php";
+	include "messages.php";
+	include "spiderfuncs.php";
 	error_reporting (E_ALL ^ E_NOTICE ^ E_WARNING);
 
 
@@ -100,7 +97,6 @@
 			die ("Logging option is set, but cannot open file for logging.");
 		}
 	}
-	else {$log_handle=false;}
 	
 	if ($all ==  1) {
 		index_all();
@@ -132,8 +128,8 @@
 		if (!isset($out)) {
 			$out = "";
 		}
-		if(!isset($_GET['index_url']))
-			index_site($url, $reindex, $maxlevel, $soption, $in, $out, $domaincb);
+
+		index_site($url, $reindex, $maxlevel, $soption, $in, $out, $domaincb);
 
 	}
 
@@ -159,7 +155,7 @@
 		$thislevel = $level - 1;
 
 		if (strstr($url_status['state'], "Relocation")) {
-			$url = eregi_replace(" ", "", url_purify($url_status['path'], $url, $can_leave_domain));
+			$url = preg_replace("/ /", "", url_purify($url_status['path'], $url, $can_leave_domain));
 
 			if ($url <> '') {
 				$result = mysql_query("select link from ".$mysql_table_prefix."temp where link='$url' && id = '$sessid'");

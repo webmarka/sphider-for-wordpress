@@ -3,7 +3,7 @@
 	<!-- category tree -->
 	<br/>
 	<div class="main_cat1">
-	<a href="<?=$searchFile?>"><?php print $sph_messages['Categories']?></a> >
+	<a href="search.php"><?php print $sph_messages['Categories']?></a> >
 	<?php foreach ($cat_info['cat_tree'] as $_val){?>
 		<a href="?catid=<?php print $_val['category_id']?>"><?php print $_val['category']?></a> >
 	<?php  }?>

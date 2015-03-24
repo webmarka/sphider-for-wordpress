@@ -1,3 +1,7 @@
+=== Readme Not Updated ===
+
+This readme.txt is from the original plugin in the WordPress repo (https://wordpress.org/plugins/sphider/)
+
 === Sphider for WordPress ===
 Contributors: vizioninteractive, Ando Saabas
 Tags: sphider, search, index, engine, spider, suggest
